@@ -1,13 +1,13 @@
-﻿namespace Yahtzee.Logic;
+namespace Yahtzee.Logic;
 
 public class Player
 {
-    private string name;
-    ScoreSheet scoreSheet;
-    
+    public string Name { get; }
+    public ScoreSheet ScoreSheet { get; }
+
     public Player(string name)
     {
-        this.name = name;
-        scoreSheet = new ScoreSheet();
+        Name = name;
+        ScoreSheet = new ScoreSheet();
     }
 }
