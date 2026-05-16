@@ -20,7 +20,7 @@ public class ScoreCalculator
             ScoreCategory.FullHouse     => IsFullHouse(dice) ? 25 : 0,
             ScoreCategory.SmallStraight => IsSmallStraight(dice) ? 30 : 0,
             ScoreCategory.LargeStraight => IsLargeStraight(dice) ? 40 : 0,
-            ScoreCategory.Yahtzee       => IsYahtzee(dice) ? 50 : 0,
+            ScoreCategory.Yahtzee     => IsYahtzee(dice) ? 50 : 0,
             ScoreCategory.Chance        => SumAll(dice),
             
             _ => throw new ArgumentOutOfRangeException(nameof(category)) 

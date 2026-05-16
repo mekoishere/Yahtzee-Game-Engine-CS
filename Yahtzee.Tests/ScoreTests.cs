@@ -14,54 +14,78 @@ public class ScoreTests
     }
 
     [Test]
-    public void Ones_WithThreeOnes_ReturnsThree()
+    [TestCase(new[] { 1, 1, 1, 4, 5 }, 3)]
+    [TestCase(new[] { 1, 2, 3, 4, 5 }, 1)]
+    [TestCase(new[] { 2, 2, 2, 2, 2 }, 0)]
+    public void Ones_CalculatesCorrectly(int[] dice, int expected)
     {
-        // Arrange
-        int[] dice = { 1, 1, 1, 4, 5 };
-
-        // Act
-        int result = _calculator.Calculate(dice, ScoreCategory.Ones);
-
-        // Assert
-        Assert.That(result, Is.EqualTo(3));
+        Assert.That(_calculator.Calculate(dice, ScoreCategory.Ones), Is.EqualTo(expected));
     }
 
     [Test]
-    public void FullHouse_WithThreeFoursAndTwoTwos_ReturnsTwentyFive()
+    [TestCase(new[] { 6, 6, 2, 3, 4 }, 12)]
+    [TestCase(new[] { 1, 2, 3, 4, 5 }, 0)]
+    public void Sixes_CalculatesCorrectly(int[] dice, int expected)
     {
-        // Arrange
-        int[] dice = { 4, 4, 4, 2, 2 };
-
-        // Act
-        int result = _calculator.Calculate(dice, ScoreCategory.FullHouse);
-
-        // Assert
-        Assert.That(result, Is.EqualTo(25));
+        Assert.That(_calculator.Calculate(dice, ScoreCategory.Sixes), Is.EqualTo(expected));
     }
 
     [Test]
-    public void SmallStraight_WithSequenceOfFour_ReturnsThirty()
+    [TestCase(new[] { 3, 3, 3, 4, 5 }, 18)] // Sum of all: 3+3+3+4+5 = 18
+    [TestCase(new[] { 3, 3, 4, 4, 5 }, 0)]  // No three of a kind
+    public void ThreeOfAKind_CalculatesCorrectly(int[] dice, int expected)
     {
-        // Arrange
-        int[] dice = { 1, 2, 3, 4, 6 };
-
-        // Act
-        int result = _calculator.Calculate(dice, ScoreCategory.SmallStraight);
-
-        // Assert
-        Assert.That(result, Is.EqualTo(30));
+        Assert.That(_calculator.Calculate(dice, ScoreCategory.ThreeOfAKind), Is.EqualTo(expected));
     }
 
     [Test]
-    public void Yahtzee_WithFiveSameDice_ReturnsFifty()
+    [TestCase(new[] { 4, 4, 4, 4, 2 }, 18)] // Sum of all: 4+4+4+4+2 = 18
+    [TestCase(new[] { 4, 4, 4, 2, 2 }, 0)]  // No four of a kind
+    public void FourOfAKind_CalculatesCorrectly(int[] dice, int expected)
     {
-        // Arrange
-        int[] dice = { 6, 6, 6, 6, 6 };
+        Assert.That(_calculator.Calculate(dice, ScoreCategory.FourOfAKind), Is.EqualTo(expected));
+    }
 
-        // Act
-        int result = _calculator.Calculate(dice, ScoreCategory.Yahtzee);
+    [Test]
+    [TestCase(new[] { 2, 2, 3, 3, 3 }, 25)]
+    [TestCase(new[] { 2, 2, 2, 2, 2 }, 0)]  // Sovereign is not a Full House by default rules
+    [TestCase(new[] { 1, 2, 3, 4, 5 }, 0)]
+    public void FullHouse_CalculatesCorrectly(int[] dice, int expected)
+    {
+        Assert.That(_calculator.Calculate(dice, ScoreCategory.FullHouse), Is.EqualTo(expected));
+    }
 
-        // Assert
-        Assert.That(result, Is.EqualTo(50));
+    [Test]
+    [TestCase(new[] { 1, 2, 3, 4, 6 }, 30)]
+    [TestCase(new[] { 2, 3, 4, 5, 1 }, 30)]
+    [TestCase(new[] { 1, 1, 2, 3, 4 }, 30)] // Contains sequence with duplicates
+    [TestCase(new[] { 1, 2, 4, 5, 6 }, 0)]
+    public void SmallStraight_CalculatesCorrectly(int[] dice, int expected)
+    {
+        Assert.That(_calculator.Calculate(dice, ScoreCategory.SmallStraight), Is.EqualTo(expected));
+    }
+
+    [Test]
+    [TestCase(new[] { 1, 2, 3, 4, 5 }, 40)]
+    [TestCase(new[] { 2, 3, 4, 5, 6 }, 40)]
+    [TestCase(new[] { 1, 2, 3, 4, 6 }, 0)]
+    public void LargeStraight_CalculatesCorrectly(int[] dice, int expected)
+    {
+        Assert.That(_calculator.Calculate(dice, ScoreCategory.LargeStraight), Is.EqualTo(expected));
+    }
+
+    [Test]
+    [TestCase(new[] { 5, 5, 5, 5, 5 }, 50)]
+    [TestCase(new[] { 1, 1, 1, 1, 2 }, 0)]
+    public void Sovereign_CalculatesCorrectly(int[] dice, int expected)
+    {
+        Assert.That(_calculator.Calculate(dice, ScoreCategory.Yahtzee), Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void Chance_ReturnsSumOfAllDice()
+    {
+        int[] dice = { 1, 2, 3, 4, 5 }; // Sum = 15
+        Assert.That(_calculator.Calculate(dice, ScoreCategory.Chance), Is.EqualTo(15));
     }
 }
